@@ -1,0 +1,38 @@
+## GIT Commands 
+## HTTPS vs. SSH?
+
+
+# Show current git changes
+git status
+
+# Show log
+git log
+
+# clone an existing “remote”
+git clone
+
+# Create an empty repo or locally
+git init
+
+# Add one or more files for staging
+git add
+
+
+# Find and download “remote” changes
+git pull
+
+
+# Create a snapshot
+git commit
+# Add a commit message without entering vim…
+-m 'message'
+# allt i katalogen och nedåt
+git commit . 
+
+# Push changes to remote (upp till github)
+git push
+
+# kör git pull innan för att se om fler har ändrat
+git pull
+git push
+
