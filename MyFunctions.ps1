@@ -41,8 +41,15 @@ function Get-CourseUser {
 
 
 ###################
-
-
+<# Using code from the `AddUser.ps1` file Create a function named `Add-CourseUser` that:
+    # Has five parameters
+        # DatabaseFile (Default value `$PSScriptRoot\MyLabFile.csv`)
+        # Name (type [string], mandatory)
+        # Age (type [int], mandatory)
+        # Color (has a validateset 'red', 'green', 'blue', 'yellow', mandatory)
+        # UserID (If none is given - generate one automatically)
+    # Adds the given user to the database file
+#>
 function Add-CourseUser {
     [CmdletBinding()]
     Param (
@@ -71,3 +78,48 @@ function Add-CourseUser {
     Get-Content -Path $DatabaseFile
     #     compare-object -ReferenceObject $DatabaseFile -DifferenceObject  $MyCsvUser
 } 
+
+
+
+#################
+<#
+ Using code from the `GetUser.ps1` file Create a function named `Remove-CourseUser` that:
+  - Has parameter `DatabaseFile` with a default value of `$PSScriptRoot\MyLabFile.csv`
+  - Using `SupportsShouldProcess` and `ConfirmImpact` Asks the user for confirmation, and based on the answer
+    - Deletes the user
+    - Outputs "Did not remove user $($RemoveUser.Name)"
+
+#>
+function Remove-CourseUser {
+    [CmdletBinding(SupportsShouldProcess,ConfirmImpact='High')]
+    param (
+        $DatabaseFile = "C:\Users\fm\PSAdvrepo\Labfiles\MyLabFile.csv"
+    )
+    
+    $MyUserList = Get-Content -Path $DatabaseFile | ConvertFrom-Csv
+    $RemoveUser = $MyUserList | Out-GridView -OutputMode Single #-PassThru 
+    $RemoveUser
+    
+
+    if ($PSCmdlet.ShouldProcess($RemoveUser.name))
+    {
+        Write-Output "$RemoveUser true"
+        $MyUserList = $MyUserList | Where-Object {
+            -not (
+                $_.Name -eq $RemoveUser.Name -and
+                $_.Age -eq $RemoveUser.Age -and
+                $_.Color -eq $RemoveUser.Color -and
+                $_.Id -eq $RemoveUser.Id
+            )
+        }
+        Set-Content -Value $($MyUserList | ConvertTo-Csv -notypeInformation) -Path $MyUserListFile
+    }
+    else
+    {
+        Write-Output "$RemoveUser false"
+        "Did not remove user $($RemoveUser.Name)"
+        # Code that should be processed if doing a WhatIf operation
+        # Must NOT change anything outside of the function / script
+    }
+    Get-Content -Path $DatabaseFile
+    }
