@@ -181,4 +181,79 @@ function Remove-CourseUser {
         # compare-object -ReferenceObject $DatabaseFile -DifferenceObject  $MyCsvUser
     } 
 
+
+    <#
+  - Create a class, `User`, with the same properties as your database user
+  - Add a constructor to set the properties directly when instantiating the class
+  - Add an override of the ToString() Method to output the user as csv, matching the contents of `MyLabFile.csv`
+  - Replace the `$MyCsvUser = "$Name,$Age,{0},{1}" -f $Color, $UserId` line in the `Add-CourseUser` function with the newly created class and ToString() method
+
+# Expected outcome
+#>
  
+<# taken enum from above
+enum ColorEnum {
+    red 
+    green
+    blue
+    yellow
+
+    }
+#>
+
+# class
+    class User {
+        [string] $Name
+        [int] $Age
+        [ColorEnum] $Color 
+        [int] $Id
+    
+        # constructor 
+        Participant([String]$Name, [int]$Age, [ColorEnum]$Color, [int]$Id) {
+            $This.Name = $Name
+            $This.Age = $Age
+            $This.Color = $Color
+            $This.Id = $Id
+        }
+        
+        # string
+        [string] ToString() {
+            
+            Return $This.Name, $This.Age, $This.Color, $This.Id
+        }
+    }
+  
+
+    function Add-CourseUser {
+        [CmdletBinding()]
+        Param (
+            $DatabaseFile = "C:\Users\fm\PSAdvrepo\Labfiles\MyLabFile.csv",
+    
+            [Parameter(Mandatory)]
+            [string]$Name,
+    
+            [Parameter(Mandatory)]
+            [Int]$Age,
+    
+            [Parameter(Mandatory)]
+            [ColorEnum]$Color,
+            #[ValidateSet('red', 'green', 'blue', 'yellow')]
+            #[string]$Color,
+    
+            $UserID = (Get-Random -Minimum 10 -Maximum 100000)
+        )
+        
+        $MyNewUser = [User]::new($Name, $Age, $Color, $UserId)
+        $MyCsvUser = $MyNewUser.ToString() 
+
+        $MyCsvUser = "$Name,$Age,$Color,$UserId"
+        
+        $NewCSv = Get-Content $DatabaseFile -Raw
+        $NewCSv += $MyCsvUser
+    
+        Set-Content -Value $NewCSv -Path $DatabaseFile
+        # läs den nya filen
+        Get-Content -Path $DatabaseFile
+        # compare-object -ReferenceObject $DatabaseFile -DifferenceObject  $MyCsvUser
+    } 
+     
