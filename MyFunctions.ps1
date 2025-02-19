@@ -123,3 +123,62 @@ function Remove-CourseUser {
     }
     Get-Content -Path $DatabaseFile
     }
+
+   <#
+    [flags()] enum mybitflagenum {
+
+        red = 1
+        blue = 2
+        green = 4
+        yellow = 8
+    }
+
+    [mybitflagenum]5
+    
+    #>
+
+<#- Create an Enum called `ColorEnum` with the values `red`, `green`, `blue`, `yellow`.
+  - Remove the ValidateSet on the `Color` parameter, in the `Add-CourseUser` function
+  - Cast the parameter `Color` as type `ColorEnum`
+  - Verify that tab completion still behaves as expected.
+#>
+
+    enum ColorEnum {
+    red 
+    green
+    blue
+    yellow
+
+    }
+
+    function Add-CourseUser {
+        [CmdletBinding()]
+        Param (
+            $DatabaseFile = "C:\Users\fm\PSAdvrepo\Labfiles\MyLabFile.csv",
+    
+            [Parameter(Mandatory)]
+            [string]$Name,
+    
+            [Parameter(Mandatory)]
+            [Int]$Age,
+    
+            [Parameter(Mandatory)]
+            [ColorEnum]$Color,
+            #[ValidateSet('red', 'green', 'blue', 'yellow')]
+            #[string]$Color,
+    
+            $UserID = (Get-Random -Minimum 10 -Maximum 100000)
+        )
+        
+        $MyCsvUser = "$Name,$Age,$Color,$UserId"
+        
+        $NewCSv = Get-Content $DatabaseFile -Raw
+        $NewCSv += $MyCsvUser
+    
+        Set-Content -Value $NewCSv -Path $DatabaseFile
+        # läs den nya filen
+        Get-Content -Path $DatabaseFile
+        # compare-object -ReferenceObject $DatabaseFile -DifferenceObject  $MyCsvUser
+    } 
+
+ 
