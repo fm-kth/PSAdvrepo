@@ -391,3 +391,82 @@ function Confirm-CourseID {
         }
     }
 }
+
+
+
+# API
+Invoke-RestMethod -FollowRelLink # följer redirects
+
+$body= @{
+title = 'post'
+
+}
+
+# LABB 05
+
+<#
+Use the free testing API at [JSONPlaceholder](https://jsonplaceholder.typicode.com/) with different HTTP request methods.
+
+The endpoint for the testing API is `https://jsonplaceholder.typicode.com`.
+#>
+
+$url = 'https://jsonplaceholder.typicode.com/'
+
+Invoke-RestMethod -Uri "$url/posts"
+
+ Invoke-RestMethod -Uri "$url/posts/1"
+<# OUTPUT
+userId  id title                                                                           body
+------  -- -----                                                                           ----
+     1   1 sunt aut facere repellat provident occaecati excepturi optio reprehenderit      quia et suscipit…
+     #>
+
+    
+
+     Invoke-WebRequest -Uri "$url/posts/1"
+
+     <#
+StatusCode        : 200
+StatusDescription : OK
+Content           : {
+                      "userId": 1,
+                      "id": 1,
+                      "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+                      "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nrepr…
+RawContent        : HTTP/1.1 200 OK
+                    Date: Wed, 19 Feb 2025 12:33:56 GMT
+                    Transfer-Encoding: chunked
+                    Connection: keep-alive
+                    Report-To: {"group":"heroku-nel","max_age":3600,"endpoints":[{"url":"https://nel.heroku.com/re…
+Headers           : {[Date, System.String[]], [Transfer-Encoding, System.String[]], [Connection, System.String[]], [Report-To, System.String[]]…}
+Images            : {}
+InputFields       : {}
+Links             : {}
+RawContentLength  : 292
+RelationLink      : {}#>
+
+$Uri = 'https://jsonplaceholder.typicode.com/posts'
+
+$postdata = @{
+    title = 'post'
+    body = 'text'
+    userId = 1
+} 
+
+Invoke-RestMethod -Uri $Uri	-Method "POST" -ContentType 'application/json' -Body (ConvertTo-Json -Compress -InputObject $postdata )
+#Invoke-WebRequest -Uri $Uri	-Method "POST" -Body (ConvertTo-Json -Compress -InputObject $postdata )
+
+
+#XML
+$xmlurl = 'https://www.w3schools.com/xml/cd_catalog.xml'
+
+$cdcatalog = Invoke-RestMethod $xmlurl
+
+$cdcatalog.CATALOG.CD
+
+function Select-CDInfoAsJson {
+
+
+
+    
+}
